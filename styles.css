@@ -1,0 +1,1314 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) minmax(500px, 5fr) minmax(200px, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 2000px;
+    width: 100%;
+    margin: 0 auto;
+    background: #2b2b3d;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-left, .history-container {
+    background-color: #3a3a4f;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    overflow-y: auto;
+    max-height: 80vh;
+    width: clamp(200px, 15vw, 300px);
+}
+
+.sidebar-left h3, .history-container h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background-color: #4a4a5f;
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+}
+
+.button-group {
+    display: flex;
+    gap: 5px;
+    z-index: 1;
+}
+
+button {
+    flex: 1;
+    background-color: #ff66a3;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: 0.3s;
+    font-family: 'Courier New', monospace;
+    padding: 12px 20px;
+}
+
+button:hover {
+    background-color: #ff4d94;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: clamp(500px, 70vw, 1400px);
+}
+
+.album-cover {
+    width: 100%;
+    height: calc(100% - 100px);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    cursor: move;
+    overflow: hidden;
+    background-color: #3a3a4f;
+}
+
+.song-item, .favorite-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #4a4a5f;
+}
+
+.song-item img, .favorite-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.song-item:hover, .favorite-item:hover {
+    background-color: #5a5a6f;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #3a3a4f;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.calendar-container {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.5rem;
+    background: #2b2b3d;
+    padding: 15px 20px 20px 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 100%;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 5px;
+    color: #f9f9f9;
+    grid-column: 1 / -1;
+    width: 100%;
+    position: relative;
+    height: 40px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    background: #3a3a4f;
+    border-radius: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    overflow: hidden;
+}
+
+.calendar-day:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background-color: #4a4a5f;
+}
+
+.calendar-day .music-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.calendar-day .music-cover:active {
+    transform: scale(0.95);
+}
+
+.calendar-day .music-cover:hover::after {
+    content: '双击打开 Spotify';
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.calendar-day .diary-entry {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* background: rgba(0, 0, 0, 0.8); */
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    font-family: 'Courier New', monospace;
+    line-height: 1.5;
+    opacity: 0;
+    transition: opacity 0.3s;
+    min-height: 60px;
+    border: none;
+    outline: none;
+    z-index: 2;
+    padding: 12px;
+}
+
+.diary-entry.has-content,
+.diary-entry:focus {
+    opacity: 1;
+}
+
+.calendar-day:hover .diary-entry {
+    opacity: 1;
+}
+
+.diary-entry[placeholder]:empty:focus::before {
+    content: attr(placeholder);
+    color: #888;
+    font-style: italic;
+}
+
+.drag-over {
+    background-color: #444;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 5px;
+    background-color: #444;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 100%;
+    width: 0;
+    background-color: #ff66a3;
+    transition: width 0.1s linear;
+}
+
+.draggable {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    min-width: 200px;
+    min-height: 200px;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    resize: both;
+}
+
+.resize-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #1db954;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.draggable:hover .resize-handle {
+    opacity: 1;
+}
+
+.resize-handle.top-left {
+    top: 0;
+    left: 0;
+    cursor: nw-resize;
+}
+
+.resize-handle.top-right {
+    top: 0;
+    right: 0;
+    cursor: ne-resize;
+}
+
+.resize-handle.bottom-left {
+    bottom: 0;
+    left: 0;
+    cursor: sw-resize;
+}
+
+.resize-handle.bottom-right {
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+}
+
+.title-bar {
+    width: 100%;
+    padding: 10px;
+    background-color: #fa0079;
+    color: white;
+    cursor: grab;
+    text-align: center;
+    font-size: 14px;
+    user-select: none;
+}
+
+.album-cover {
+    width: 100%;
+    height: calc(100% - 100px);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    cursor: move;
+    overflow: hidden;
+}
+
+.button-group {
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    gap: 5px;
+}
+
+#song-info {
+    padding: 5px 10px;
+    width: 100%;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    font-family: 'Courier New', monospace;
+}
+
+.history-container {
+    background-color: #b39fd173;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+.song-item {
+    position: relative;
+    width: 200px;
+    height: 90px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.song-item p {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    font-size: 16px;
+    text-align: center;
+    margin: 0;
+}
+
+.lyrics-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    overflow-y: auto;
+    white-space: pre-line;
+}
+
+.album-cover:hover .lyrics-container {
+    opacity: 1;
+}
+
+.lyrics-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lyrics-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.lyrics-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.recommendations {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #444;
+}
+
+.recommendation-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 8px;
+    background: #4a4a5f;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.recommendation-item:hover {
+    background: #5a5a6f;
+    transform: translateY(-2px);
+}
+
+.recommendation-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.reason {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+}
+
+.stats-container {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #2b2b3d;
+    border-radius: 8px;
+}
+
+.stats-section {
+    margin-top: 10px;
+}
+
+.stats-section h4 {
+    margin-bottom: 5px;
+    color: #FF0080;
+}
+
+.stats-section ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.stats-section li {
+    font-size: 14px !important;
+    padding: 3px 0;
+}
+
+.cover-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.delete-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+}
+
+.cover-wrapper:hover .delete-button {
+    opacity: 1;
+}
+
+.delete-button:hover {
+    background: rgba(255, 0, 0, 1);
+    transform: scale(1.1);
+}
+
+.delete-favorite {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+}
+
+.favorite-item:hover .delete-favorite {
+    opacity: 1;
+}
+
+.delete-favorite:hover {
+    background: rgba(255, 0, 0, 1);
+    transform: scale(1.1);
+}
+
+.favorite-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #444;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-favorite {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.favorite-item:hover .delete-favorite {
+    opacity: 1;
+}
+
+.delete-favorite:hover {
+    background: rgba(255, 0, 0, 1);
+    transform: scale(1.1);
+}
+
+.feedback-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 0, 128, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-size: 16px;
+    pointer-events: none;
+    animation: fadeInOut 2s ease-in-out;
+    z-index: 1000;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+}
+
+.export-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ff66a3;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.export-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    background-color: #ff4d94;
+}
+
+.loading-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.help-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.help-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    background-color: #555;
+}
+
+.help-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.help-content {
+    background: #2b2b3d;
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+}
+
+.close-help {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s;
+}
+
+.close-help:hover {
+    color: white;
+}
+
+.help-section {
+    margin: 20px 0;
+}
+
+.help-section h3 {
+    color: #FF0080;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.help-section ul {
+    list-style: none;
+    padding-left: 10px;
+}
+
+.help-section li {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.help-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #FF0080;
+}
+
+/* 滚动条样式 */
+.help-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.help-content::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.help-content::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+.help-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+h2 {
+    font-size: 24px !important;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 20px !important;
+    font-weight: bold;
+}
+
+h4 {
+    font-size: 18px !important;
+    font-weight: bold;
+}
+
+#song-info p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+#song-info strong {
+    font-size: 18px;
+}
+
+.calendar-day .date-number {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.diary-entry {
+    font-size: 16px !important;
+    padding: 12px !important;
+}
+
+.song-item p, .favorite-item p {
+    font-size: 16px;
+}
+
+.song-item strong, .favorite-item strong {
+    font-size: 18px;
+}
+
+.recommendation-item p {
+    font-size: 16px;
+}
+
+.recommendation-item strong {
+    font-size: 18px;
+}
+
+.stats-section li {
+    font-size: 14px !important;
+    padding: 3px 0;
+}
+
+.help-content {
+    font-size: 16px;
+}
+
+.help-content li {
+    font-size: 16px;
+    padding: 8px 0;
+}
+
+.feedback-message {
+    font-size: 16px !important;
+    padding: 10px 20px !important;
+}
+
+.export-button, .help-button {
+    font-size: 18px !important;
+}
+
+.calendar-weekday {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 修改标题字体 */
+h1, h2, h3, h4, .title-bar {
+    font-family: 'Courier New', monospace !important;
+    font-weight: bold !important;
+}
+
+/* 修改其他文本元素的字体 */
+input[type="text"],
+button,
+.diary-entry,
+#song-info,
+.song-item p,
+.favorite-item p,
+.recommendation-item p,
+.stats-section li,
+.help-content,
+.feedback-message,
+.calendar-weekday {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+
+/* 确保所有文本都使用粗体 */
+p, span, div {
+    font-weight: bold;
+}
+
+/* 修改按钮文本 */
+button {
+    font-weight: bold;
+}
+
+/* 修改日记文本 */
+.diary-entry {
+    font-weight: bold !important;
+}
+
+/* 修改歌曲信息文本 */
+#song-info p {
+    font-weight: bold;
+}
+
+/* 修改统计信息文本 */
+.stats-section li {
+    font-weight: bold !important;
+}
+
+/* 修改帮助内容文本 */
+.help-content {
+    font-weight: bold;
+}
+
+/* 修改日历星期文本 */
+.calendar-weekday {
+    font-weight: bold;
+}
+
+/* 为中文内容设置字体 */
+.diary-entry,
+.song-info p,
+.favorite-item p,
+.recommendation-item p,
+.stats-section li {
+    font-family: 'Noto Serif SC', serif;
+}
+
+/* 确保日记输入框使用正确的字体 */
+.diary-entry {
+    font-family: 'Noto Serif SC', serif !important;
+    font-weight: 500; /* 可以根据需要调整字重 */
+}
+
+/* 确保歌曲信息中的中文使用正确的字体 */
+.song-info p {
+    font-family: 'Noto Serif SC', serif;
+}
+
+/* 统计信息中的中文 */
+.stats-section li {
+    font-family: 'Noto Serif SC', serif;
+}
+
+.calendar-weekday {
+    text-align: center;
+    padding: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+    width: 100%;
+}
+
+/* 添加歌曲信息样式 */
+.song-info-container {
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.song-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #FF0080;
+}
+
+.song-artist {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.song-details-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #ccc;
+    gap: 10px;
+}
+
+.song-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.detail-label {
+    color: #888;
+}
+
+.detail-value {
+    color: #fff;
+}
+
+/* 修改左侧栏的间距和样式 */
+.section-header {
+    margin: 10px 0 5px 0; /* 减小上下间距 */
+}
+
+.section-header h3 {
+    font-size: 14px; /* 减小标题字体 */
+    margin-bottom: 3px;
+}
+
+/* 为不同部分设置不同的标题颜色和背景 */
+/* 搜索结果 */
+.search-results .section-header h3 {
+    color: #FF6600;
+}
+
+.search-results .favorite-item {
+    background: rgba(255, 102, 0, 0.7); /* #FF6600 with 70% opacity */
+}
+
+/* 收藏列表 */
+.favorites-section .section-header h3 {
+    color: #00FF9C;
+}
+
+.favorites-section .favorite-item {
+    background: rgba(0, 255, 156, 0.7);
+}
+
+/* 推荐音乐 */
+.recommendations h3 {
+    color: #FFF100;
+}
+
+.recommendations .recommendation-item {
+    background: rgba(255, 241, 0, 0.7); /* #FFF100 with 70% opacity */
+}
+
+/* 确保文字在深色背景上清晰可见 */
+.favorite-item p,
+.recommendation-item p {
+    color: white;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 悬停效果 */
+.search-results .favorite-item:hover {
+    background: rgba(255, 102, 0, 0.8);
+}
+
+.favorites-section .favorite-item:hover {
+    background: rgba(0, 255, 156, 0.8);
+}
+
+.recommendations .recommendation-item:hover {
+    background: rgba(255, 241, 0, 0.8);
+}
+
+/* 修改分割线样式 */
+.divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1); /* 更透明的分割线 */
+    margin: 5px 0;
+}
+
+/* 调整列表容器的样式 */
+.results-list,
+.favorites-list {
+    max-height: 250px; /* 减小最大高度 */
+    margin-bottom: 10px; /* 减小底部间距 */
+}
+
+/* 调整列表项的样式 */
+.favorite-item {
+    padding: 8px; /* 减小内边距 */
+    margin-bottom: 5px; /* 减小项目间距 */
+    background: rgba(68, 68, 68, 0.6); /* 更透明的背景 */
+}
+
+/* 移除收藏列表中的绿色标记 */
+.favorite-item::before {
+    display: none;
+}
+
+/* 调整搜索结果项的样式 */
+.search-results .favorite-item {
+    background: rgba(255, 105, 180, 0.1); /* 搜索结果使用淡粉色背景 */
+}
+
+/* 调整收藏列表项的样式 */
+.favorites-section .favorite-item {
+    background: rgba(65, 105, 225, 0.1); /* 收藏列表使用淡蓝色背景 */
+}
+
+/* 调整推荐列表项的样式 */
+.recommendations .recommendation-item {
+    background: rgba(147, 112, 219, 0.1); /* 推荐列表使用淡紫色背景 */
+}
+
+/* 修改左侧栏的样式 */
+.sidebar-left {
+    background-color: #4a4a6f; /* 更亮的背景色 */
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+/* 搜索框样式 */
+input[type="text"] {
+    background-color: #5a5a7f; /* 更亮的输入框背景 */
+    font-size: 14px; /* 更小的字体 */
+    padding: 6px;
+}
+
+/* 搜索结果样式 */
+.search-results .favorite-item {
+    background: rgba(255, 105, 180, 0.15); /* 亮的粉色背景 */
+    padding: 6px;
+    margin-bottom: 4px;
+}
+
+/* 收藏列表样式 */
+.favorites-section .favorite-item {
+    background: rgba(65, 105, 225, 0.15); /* 更亮的蓝色背景 */
+    padding: 6px;
+    margin-bottom: 4px;
+}
+
+/* 推荐列表样式 */
+.recommendations .recommendation-item {
+    background: rgba(147, 112, 219, 0.15); /* 更亮的紫色背景 */
+    padding: 6px;
+    margin-bottom: 4px;
+}
+
+/* 调整字体大小 */
+.favorite-item p, 
+.recommendation-item p,
+.song-info p {
+    font-size: 12px; /* 更小的字体 */
+    line-height: 1.3;
+}
+
+.favorite-item strong, 
+.recommendation-item strong,
+.song-info strong {
+    font-size: 13px; /* 更小的标题字体 */
+}
+
+/* 标题样式 */
+.section-header h3 {
+    font-size: 13px; /* 更小的标题字体 */
+    margin-bottom: 2px;
+}
+
+/* 分割线样式 */
+.divider {
+    background: rgba(255, 255, 255, 0.2); /* 更亮的分割线 */
+    margin: 4px 0;
+}
+
+/* 列表容器样式 */
+.results-list,
+.favorites-list {
+    max-height: 200px;
+    margin-bottom: 8px;
+}
+
+/* 悬停效果 */
+.favorite-item:hover,
+.recommendation-item:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* 更亮的悬停效果 */
+}
+
+/* 修改统计信息的间距 */
+.stats-container {
+    margin-bottom: 15px; /* 减小底部间距 */
+    padding: 10px; /* 减小内边距 */
+    background: #524da052;
+    border-radius: 8px;
+}
+
+.stats-section {
+    margin-top: 10px; /* 减小顶部间距 */
+}
+
+.stats-section h4 {
+    margin-bottom: 5px; /* 减小标题底部间距 */
+    color: #FF0080;
+}
+
+.stats-section ul {
+    list-style: none;
+    margin: 0; /* 移除默认边距 */
+    padding: 0; /* 移除默认内边距 */
+}
+
+.stats-section li {
+    font-size: 14px !important; /* 稍微减小字体大小 */
+    padding: 3px 0; /* 减小每项之间的间距 */
+}
+
+/* 修改标题间距 */
+.stats-container h3 {
+    margin-bottom: 8px; /* 减小标题底部间距 */
+    font-size: 16px;
+}
+
+@media screen and (max-width: 1200px) {
+    .container {
+        grid-template-columns: 180px 4fr 180px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;  /* 在小屏幕上改为单列布局 */
+    }
+}
+
+/* 添加收藏按钮样式 */
+.favorite-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 50px;  /* 增加按钮大小 */
+    height: 50px; /* 增加按钮大小 */
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;  /* 增加默认爱心大小 */
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.favorite-button:hover {
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.8);
+    font-size: 28px;  /* 悬停时稍微小一点 */
+}
+
+.favorite-button.active {
+    color: #FF0080;
+    font-size: 75px; 
+}
+
+/* 确保 album-cover 可以正确显示收藏按钮 */
+.album-cover {
+    position: relative;
+}
+
+.play-similar-button {
+    margin-top: 10px;
+    width: auto;
+    padding: 5px 15px;
+    font-size: 14px;
+    background-color: #ff66a3;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.play-similar-button:hover {
+    background-color: #ff4d94;
+    transform: translateY(-2px);
+}
+
+/* 调整歌曲信息容器以适应新按钮 */
+.song-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+/* 修改日历头部样式 */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 5px;
+    color: #f9f9f9;
+    grid-column: 1 / -1;
+    width: 100%;
+    position: relative;
+    height: 40px;
+}
+
+/* 修改月份切换按钮样式 */
+.prev-month,
+.next-month {
+    background: rgba(255, 0, 128, 0.8);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    z-index: 10;
+    min-width: 35px;
+    font-size: 14px;
+}
+
+/* 月份标题样式 */
+.calendar-header h2 {
+    margin: 0 15px;
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* 确保星期标题不会与按钮重叠 */
+.calendar-weekday {
+    text-align: center;
+    padding: 5px 0;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%;
+    z-index: 1;
+    color: #888;
+}
